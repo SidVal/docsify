@@ -6,7 +6,7 @@
 
 docsify genera su sitio web de documentación sobre la marcha. A diferencia de GitBook, no genera archivos estáticos html. En cambio, carga y analiza de forma inteligente sus archivos de Markdown y los muestra como sitio web. Todo lo que necesita hacer es crear un `index.html` para comenzar y [desplegarlo en GitHub Pages](deploy.md).
 
-Lee la guía [Comienzo Rápido](quickstart.md) para más detalles.
+Lee la guía [Inicio Rápido](quickstart.md) para más detalles.
 
 ## Características
 
@@ -17,12 +17,11 @@ Lee la guía [Comienzo Rápido](quickstart.md) para más detalles.
 * Complemento API de utilidad
 * Soporta Emoji
 * Compatible con IE10+
-
-- Soporta SSR ([ejemplo](https://github.com/QingWei-Li/docsify-ssr-demo))
+* Soporta SSR ([ejemplo](https://github.com/QingWei-Li/docsify-ssr-demo))
 
 ## Ejemplos
 
-Mira nuestro [Showcase](https://github.com/QingWei-Li/docsify/#showcase) de docsify en uso.
+Mira nuestro [Showcase](awesome.md) de docsify en uso.
 
 ## Donaciones
 
