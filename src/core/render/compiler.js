@@ -30,6 +30,11 @@ const compileMedia = {
       url
     }
   },
+  mermaid(url) {
+    return {
+      url
+    }
+  },
   iframe(url, title) {
     return {
       code: `<iframe src="${url}" ${title || 'width=100% height=400'}></iframe>`
@@ -85,24 +90,38 @@ export class Compiler {
     }
 
     this._marked = compile
-    this.compile = cached(text => {
-      let html = ''
+    this.compile = text => {
+      let isCached = true
+      const result = cached(_ => {
+        isCached = false
+        let html = ''
 
-      if (!text) {
-        return text
-      }
+        if (!text) {
+          return text
+        }
 
-      if (isPrimitive(text)) {
-        html = compile(text)
+        if (isPrimitive(text)) {
+          html = compile(text)
+        } else {
+          html = compile.parser(text)
+        }
+
+        html = config.noEmoji ? html : emojify(html)
+        slugify.clear()
+
+        return html
+      })(text)
+
+      const curFileName = this.router.parse().file
+
+      if (isCached) {
+        this.toc = this.cacheTOC[curFileName]
       } else {
-        html = compile.parser(text)
+        this.cacheTOC[curFileName] = [...this.toc]
       }
 
-      html = config.noEmoji ? html : emojify(html)
-      slugify.clear()
-
-      return html
-    })
+      return result
+    }
   }
 
   compileEmbed(href, title) {
@@ -127,6 +146,8 @@ export class Compiler {
         let type = 'code'
         if (/\.(md|markdown)/.test(href)) {
           type = 'markdown'
+        } else if (/\.mmd/.test(href)) {
+          type = 'mermaid'
         } else if (/\.html?/.test(href)) {
           type = 'iframe'
         } else if (/\.(mp4|ogg)/.test(href)) {
@@ -163,7 +184,7 @@ export class Compiler {
 
     /**
      * Render anchor tag
-     * @link https://github.com/chjj/marked#overriding-renderer-methods
+     * @link https://github.com/markedjs/marked#overriding-renderer-methods
      */
     origin.heading = renderer.heading = function (text, level) {
       const nextToc = {level, title: text}
@@ -204,7 +225,7 @@ export class Compiler {
       title = str
 
       if (
-        !/:|(\/{2})/.test(href) &&
+        !isAbsolutePath(href) &&
         !_self._matchNotCompileLink(href) &&
         !config.ignore
       ) {
@@ -213,7 +234,7 @@ export class Compiler {
         }
         href = router.toURL(href, null, router.getCurrentPath())
       } else {
-        attrs += ` target="${linkTarget}"`
+        attrs += href.startsWith('mailto:') ? '' : ` target="${linkTarget}"`
       }
 
       if (config.target) {
@@ -257,6 +278,16 @@ export class Compiler {
         attrs += ` title="${title}"`
       }
 
+      const size = config.size
+      if (size) {
+        const sizes = size.split('x')
+        if (sizes[1]) {
+          attrs += 'width=' + sizes[0] + ' height=' + sizes[1]
+        } else {
+          attrs += 'width=' + sizes[0]
+        }
+      }
+
       if (!isAbsolutePath(href)) {
         url = getPath(contentBase, getParentPath(router.getCurrentPath()), href)
       }
@@ -290,10 +321,9 @@ export class Compiler {
 
     if (text) {
       html = this.compile(text)
-      html = html && html.match(/<ul[^>]*>([\s\S]+)<\/ul>/g)[0]
     } else {
       const tree = this.cacheTree[currentPath] || genTree(this.toc, level)
-      html = treeTpl(tree, '<ul>')
+      html = treeTpl(tree, '<ul>{inner}</ul>')
       this.cacheTree[currentPath] = tree
     }
 
@@ -322,7 +352,7 @@ export class Compiler {
 
     cacheTree[currentPath] = tree
     this.toc = []
-    return treeTpl(tree, '<ul class="app-sub-sidebar">')
+    return treeTpl(tree)
   }
 
   article(text) {

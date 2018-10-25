@@ -30,7 +30,7 @@ Set `coverpage` to **true**, and create a `_coverpage.md`:
 * No statically built html files
 * Multiple themes
 
-[GitHub](https://github.com/QingWei-Li/docsify/)
+[GitHub](https://github.com/docsifyjs/docsify/)
 [Get Started](#docsify)
 ```
 
@@ -45,7 +45,7 @@ The background color is generated randomly by default. You can customize the bac
 
 # docsify <small>3.5</small>
 
-[GitHub](https://github.com/QingWei-Li/docsify/)
+[GitHub](https://github.com/docsifyjs/docsify/)
 [Get Started](#quick-start)
 
 <!-- background image -->
@@ -59,7 +59,7 @@ The background color is generated randomly by default. You can customize the bac
 
 ## Coverpage as homepage
 
-Normal, the coverpage and the homepage appear at the same time. Of course, you can also separate the coverpage by [onlyCover option](configuration.md#onlycover).
+Normally, the coverpage and the homepage appear at the same time. Of course, you can also separate the coverpage by [onlyCover option](configuration.md#onlycover).
 
 ## Multiple covers
 

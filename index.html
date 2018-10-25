@@ -21,8 +21,12 @@
   <script>
     window.$docsify = {
       alias: {
-        '.*?/changelog': 'https://raw.githubusercontent.com/QingWei-Li/docsify/master/CHANGELOG',
-        '/.*/_navbar.md': '/_navbar.md'
+        '.*?/changelog': 'https://raw.githubusercontent.com/docsifyjs/docsify/master/CHANGELOG',
+        '/.*/_navbar.md': '/_navbar.md',
+        '/zh-cn/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-zh/master/$1',
+        '/de-de/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-de/master/$1',
+        '/ru/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-ru/master/$1',
+        '/es/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-es/master/$1'
       },
       notFoundPage: '_404.html',
       auto2top: true,
@@ -38,7 +42,14 @@
       plugins: [
         function (hook, vm) {
           hook.beforeEach(function (html) {
-            var url = 'https://github.com/QingWei-Li/docsify/blob/master/' + vm.route.file
+            var url
+            if (/githubusercontent\.com/.test(vm.route.file)) {
+              url = vm.route.file
+                .replace('raw.githubusercontent.com', 'github.com')
+                .replace(/\/master/, '/blob/master')
+            } else {
+              url = 'https://github.com/docsifyjs/docsify/blob/master/' + vm.route.file
+            }
             var editHtml = '[:memo: Edit Document](' + url + ')\n'
 
             return editHtml

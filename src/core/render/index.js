@@ -32,7 +32,9 @@ function formatUpdated(html, updated, fn) {
   updated =
     typeof fn === 'function' ?
       fn(updated) :
-      typeof fn === 'string' ? tinydate(fn)(new Date(updated)) : updated
+      typeof fn === 'string' ?
+        tinydate(fn)(new Date(updated)) :
+        updated
 
   return html.replace(/{docsify-updated}/g, updated)
 }
@@ -227,6 +229,16 @@ export function initRender(vm) {
     }
     if (config.coverpage) {
       html += tpl.cover()
+    }
+
+    if (config.logo) {
+      const isBase64 = /^data:image/.test(config.logo)
+      const isExternal = /(?:http[s]?:)?\/\//.test(config.logo)
+      const isRelative = /^\./.test(config.logo)
+
+      if (!isBase64 && !isExternal && !isRelative) {
+        config.logo = getPath(vm.router.getBasePath(), config.logo)
+      }
     }
 
     html += tpl.main(config)

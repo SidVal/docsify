@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/dark.css" title="dark" disabled>
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/buble.css" title="buble" disabled>
   <link rel="stylesheet" href="//unpkg.com/docsify/lib/themes/pure.css" title="pure" disabled>
-  <script src="//unpkg.com/docsify-plugin-codefund@1.0.3/index.js"></script>
+  <script src="//unpkg.com/docsify-plugin-codefund/index.js"></script>
   <style>
     nav.app-nav li ul {
       min-width: 100px;
@@ -27,9 +27,13 @@
   <script>
     window.$docsify = {
       alias: {
-        '.*?/awesome': 'https://raw.githubusercontent.com/QingWei-Li/awesome-docsify/master/README.md',
-        '.*?/changelog': 'https://raw.githubusercontent.com/QingWei-Li/docsify/master/CHANGELOG.md',
-        '/.*/_navbar.md': '/_navbar.md'
+        '.*?/awesome': 'https://raw.githubusercontent.com/docsifyjs/awesome-docsify/master/README.md',
+        '.*?/changelog': 'https://raw.githubusercontent.com/docsifyjs/docsify/master/CHANGELOG.md',
+        '/.*/_navbar.md': '/_navbar.md',
+        '/zh-cn/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-zh/master/$1',
+        '/de-de/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-de/master/$1',
+        '/ru/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-ru/master/$1',
+        '/es/(.*)': 'https://raw.githubusercontent.com/docsifyjs/docs-es/master/$1'
       },
       auto2top: true,
       coverpage: true,
@@ -58,7 +62,13 @@
       plugins: [
         function (hook, vm) {
           hook.beforeEach(function (html) {
-            var url = 'https://github.com/QingWei-Li/docsify/blob/master/docs/' + vm.route.file
+            if (/githubusercontent\.com/.test(vm.route.file)) {
+              url = vm.route.file
+                .replace('raw.githubusercontent.com', 'github.com')
+                .replace(/\/master/, '/blob/master')
+            } else {
+              url = 'https://github.com/docsifyjs/docsify/blob/master/docs/' + vm.route.file
+            }
             var editHtml = '[:memo: Edit Document](' + url + ')\n'
 
             return editHtml
@@ -77,6 +87,13 @@
   <script src="//unpkg.com/prismjs/components/prism-bash.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-markdown.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-nginx.min.js"></script>
+  
+  <script>
+  ((window.gitter = {}).chat = {}).options = {
+    room: 'docsifyjs/Lobby'
+  };
+  </script>
+  <script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async defer></script>
 </body>
 
 </html>

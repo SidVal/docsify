@@ -1,6 +1,6 @@
 ![logo](_media/icon.svg)
 
-# docsify <small>4.6.10</small>
+# docsify <small>4.7.1</small>
 
 > A magical documentation site generator.
 
@@ -8,5 +8,5 @@
 * No statically built html files
 * Multiple themes
 
-[GitHub](https://github.com/QingWei-Li/docsify/)
-[Get Started](#docsify)
+[GitHub](https://github.com/docsifyjs/docsify/)
+[Getting Started](#docsify)

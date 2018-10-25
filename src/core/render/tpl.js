@@ -36,7 +36,11 @@ export function main(config) {
     '</button>' +
     '<aside class="sidebar">' +
     (config.name ?
-      `<h1><a class="app-name-link" data-nosearch>${config.name}</a></h1>` :
+      `<h1><a class="app-name-link" data-nosearch>${
+        config.logo ?
+          `<img alt=${config.name} src=${config.logo}>` :
+          config.name
+      }</a></h1>` :
       '') +
     '<div class="sidebar-nav"><!--sidebar--></div>' +
     '</aside>'
@@ -74,21 +78,18 @@ export function cover() {
  * @param  {String} tpl
  * @return {String}
  */
-export function tree(toc, tpl = '') {
+export function tree(toc, tpl = '<ul class="app-sub-sidebar">{inner}</ul>') {
   if (!toc || !toc.length) {
     return ''
   }
-
+  let innerHTML = ''
   toc.forEach(node => {
-    tpl += `<li><a class="section-link" href="${node.slug}">${
-      node.title
-    }</a></li>`
+    innerHTML += `<li><a class="section-link" href="${node.slug}">${node.title}</a></li>`
     if (node.children) {
-      tpl += `<li><ul class="children">${tree(node.children)}</li></ul>`
+      innerHTML += tree(node.children, tpl)
     }
   })
-
-  return tpl
+  return tpl.replace('{inner}', innerHTML)
 }
 
 export function helper(className, content) {
